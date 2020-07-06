@@ -1,0 +1,6 @@
+*.swp
+*.pyc
+*.swo
+/build/
+/dist/
+/MISFITS.egg-info/

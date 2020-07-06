@@ -1,0 +1,3 @@
+class BaseIterator (object) :
+
+    pass
