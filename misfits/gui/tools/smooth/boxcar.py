@@ -90,7 +90,7 @@ Move the cursor to a panel and use the scrolling to zoom in and out and the midd
         elif e.name == 'motion_notify_event' and e.button == 1 and set_width.active:
 
             if not e.inaxes is ax[1] or \
-                    e.xdata <= 0:
+                    e.xdata <= 1:
                 return
 
             spectrum.set_smooth(method(2*e.xdata))
