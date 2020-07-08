@@ -76,7 +76,8 @@ class BaseLabelTogglePoint (BaseTogglePoint) :
 
         BaseTogglePoint.set_visible(self, visible)
 
-        self.label.set_visible(visible)
+        if self.selected:
+            self.label.set_visible(visible)
 
     def delete(self):
 
