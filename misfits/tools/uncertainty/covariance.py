@@ -79,7 +79,7 @@ class Covariance (object) :
 
         for i in range(len(self.data)):
 
-            output.append('# [%f.2, %f.2]' % self.feature.limits[i])
+            output.append('# [%.2f, %.2f]' % self.feature.limits[i])
 
             for j in range(len(self.data[i])):
 
