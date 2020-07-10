@@ -53,7 +53,7 @@ class pEW (BaseTool) :
 
             _maxima = self.spectrum.spline.maxima
             j = np.where( (limits[i][0] <= _maxima) & (_maxima <= limits[i][1]) )
-            _maxima = list(_maxima[j])
+            _maxima = _maxima[j]
 
             for j, (w0, ww) in enumerate(maxima[i]):
 
