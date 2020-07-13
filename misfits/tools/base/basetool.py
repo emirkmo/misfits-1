@@ -43,7 +43,8 @@ class BaseTool (object) :
             if hasattr(self, p):
                 delattr(self, p)
 
-    def iterator_modifier(m):
+    @classmethod
+    def iterator_modifier(cls, m):
 
         def _(f):
             def __(self, *a, **kw):
