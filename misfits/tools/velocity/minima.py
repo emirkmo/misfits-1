@@ -1,4 +1,5 @@
 from inspect import stack
+from copy import deepcopy
 
 import numpy as np
 
@@ -67,6 +68,8 @@ class Minima (BaseTool) :
     @BaseTool.iterator_modifier(continuum_error)
     def __call__(self, limits, wavelengths, references):
 
+        wavelength = deepcopy(wavelengths)
+
         for i in range(len(limits)):
 
             org_waves, new_waves = list(wavelengths[i]), [None]*len(wavelengths[i])
@@ -89,4 +92,4 @@ class Minima (BaseTool) :
 
         self.set_parameters(limits=limits, wavelengths=wavelengths, references=references)
 
-        return wavelengths[:], None, None
+        return wavelengths, None, None

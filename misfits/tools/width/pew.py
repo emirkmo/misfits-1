@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 import numpy as np
 
 from scipy.interpolate import UnivariateSpline
@@ -45,7 +47,7 @@ class pEW (BaseTool) :
     @BaseTool.iterator_modifier(continuum_error)
     def __call__(self, limits, maxima):
 
-        widths = []
+        widths, maxima = [], deepcopy(maxima)
 
         for i in range(len(limits)):
 

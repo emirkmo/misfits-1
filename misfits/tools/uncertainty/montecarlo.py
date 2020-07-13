@@ -59,7 +59,7 @@ class MonteCarlo (BaseIterator) :
 
             self.feature.set_spectrum(self.sample)
 
-            res = self.feature(**deepcopy(self.params))
+            res = self.feature(**self.params)
             self.data.append(res[0])
 
         print(''.ljust(l), file=sys.stderr, end='\r')

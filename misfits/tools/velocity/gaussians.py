@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 import numpy as np
 
 from scipy.interpolate import UnivariateSpline
@@ -40,6 +42,8 @@ class Gaussians (BaseToolGaussians) :
         return velocity, units
 
     def continuum_error(self, limits, continuum, amplitudes, x0s, stddevs, references):
+
+        continuum, amplitudes = deepcopy(continuum), deepcopy(amplitudes)
 
         for i in range(len(limits)):
 
