@@ -253,14 +253,14 @@ To zoom in the upper panel, position the cursor on top of it and use the scrolli
 
     method = Gaussians(spectrum)
 
+    method.set_fix_continuum(fix_continuum)
+
     try:
         params = get_parameters_from_header(method, header)
     except KeyError:
         pass
     else:
         method(**params)
-
-    method.set_fix_continuum(fix_continuum)
 
     if gui is None:
         return method
