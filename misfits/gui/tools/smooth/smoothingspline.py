@@ -27,6 +27,9 @@ Move the cursor to a panel and use the scrolling to zoom in and out and the midd
         params = method.auto()
     spectrum.set_smooth(method(**params))
 
+    if gui is None:
+        return method
+
     ax = (gui.add_subplot(211, zoomable='horizontal'),
           gui.add_subplot(212, zoomable='horizontal'))
 
