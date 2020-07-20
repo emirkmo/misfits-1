@@ -29,7 +29,7 @@ class pEW (BaseTool) :
         p = np.poly1d(np.polyfit([w0, ww], list(map(spectrum.spline[0], [w0, ww])), 1))
         w = 1 - spectrum.smooth / p(spectrum.wave)
 
-        return UnivariateSpline(spectrum.wave, w, s=0).integral(w0, ww)
+        return UnivariateSpline(spectrum.wave, w, k=1, s=0).integral(w0, ww)
 
     def continuum_error(self, limits, maxima):
 

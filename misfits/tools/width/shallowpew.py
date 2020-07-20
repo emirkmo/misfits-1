@@ -22,10 +22,10 @@ class ShallowpEW (pEW) :
 
     def pew(self, spectrum, ap0, ap1):
 
-        p = np.poly1d(np.polyfit(*zip(*[ap0,ap1]), deg=1))
+        p = np.poly1d(np.polyfit(*zip(*[ap0, ap1]), deg=1))
         w = 1 - spectrum.flux / p(spectrum.wave)
 
-        return UnivariateSpline(spectrum.wave, w, s=0).integral(ap0,ap1)
+        return UnivariateSpline(spectrum.wave, w, k=1, s=0).integral(ap0, ap1)
 
     def continuum_error(self, limits, continua):
 
