@@ -51,7 +51,6 @@ class BasePolynomialFit (Base) :
 
         s = self.spectrum(x0, xx)
         self.polynomial = np.polyfit(s.wave, s.flux, self.degree)
-
         y0, yy = np.polyval(self.polynomial, [x0, xx])
 
         self.delete()
@@ -251,7 +250,14 @@ class ShallowPseudoEquivalentWidths (Base) :
         i = (len(list(filter(None, width.data))) - 1) // 2
 
         width.continua[i].set_data(xx=e.xdata)
-        width.continua[i].define()
+
+        try:
+            width.continua[i].define()
+        except TypeError:
+            self._active_width.delete()
+            self._active_width = None
+            self.fig.canvas.draw()
+            return
 
         if not i:
             return self.set_continuum(e)
@@ -269,7 +275,7 @@ class ShallowPseudoEquivalentWidths (Base) :
     def adj_continuum(self, e):
 
         if self._active_width:
-            if len(filter(None, self._active_width.data)) > 1:
+            if len(list(filter(None, self._active_width.data))) > 1:
                 return
             else:
                 self._active_width.delete()
