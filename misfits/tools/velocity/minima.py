@@ -81,9 +81,9 @@ class Minima (BaseTool) :
             while len(minima) and not all(w is None for w in org_waves):
 
                 def _(k):
-                    l = np.argmin((np.array(minima)-org_waves[k])**2)
-                    return (minima[l]-org_waves[k])**2, k, l
-                res = [_(k) for k,w in enumerate(org_waves) if not w is None]
+                    l = np.argmin((np.array(minima) - org_waves[k])**2)
+                    return (minima[l] - org_waves[k])**2, k, l
+                res = [_(k) for k, w in enumerate(org_waves) if not w is None]
 
                 k, l = min(res, key=lambda r:r[0])[1:]
                 org_waves[k], new_waves[k] = None, minima.pop(l)
@@ -92,4 +92,4 @@ class Minima (BaseTool) :
 
         self.set_parameters(limits=limits, wavelengths=wavelengths, references=references)
 
-        return wavelengths, None, None
+        return deepcopy(self.wavelengths), None, None

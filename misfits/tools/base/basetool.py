@@ -20,9 +20,10 @@ class BaseTool (object) :
 
     def set_parameters(self, **params):
 
+        params = deepcopy(params)
         for p in self.PARAMETERS:
             if not p in params:
-                raise KeyError
+                raise KeyError(p)
             setattr(self, p, params[p])
 
         return params
@@ -35,7 +36,7 @@ class BaseTool (object) :
                 return None
             params[p] = getattr(self, p)
 
-        return params
+        return deepcopy(params)
 
     def del_parameters(self):
 

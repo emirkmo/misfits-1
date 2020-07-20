@@ -75,8 +75,8 @@ class Gaussians (BaseToolGaussians) :
             a0 = dict(continuum=continuum[i], amplitudes=amplitudes[i], x0s=x0s[i], stddevs=stddevs[i])
             a, std, chi2 = self.fit(self.gaussians, x, y, e, fixed=('continuum',) if self.fix_continuum else (), **a0)
 
-            for k,v in a.items():
-                getattr(self,k).append(v)
+            for k, v in a.items():
+                getattr(self, k).append(v)
             std_x0s.append(std['x0s'])
             chi2s.append(chi2)
 
@@ -84,4 +84,4 @@ class Gaussians (BaseToolGaussians) :
         self.limits = limits
         self.references = references
 
-        return self.x0s[:], std_x0s, chi2s
+        return deepcopy(self.x0s), std_x0s, chi2s
