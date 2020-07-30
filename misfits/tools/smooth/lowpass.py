@@ -68,7 +68,7 @@ class LowPass (BaseSmoother) :
 
         lpwr0 = np.log10(np.mean(self.pwr[:signal*2//3])*2)
         self.slope = slope if np.isfinite(slope) else (self.lpwr[signal] - lpwr0) / signal
-        s = np.power(10, self.lpwr + self.slope * self.bins)
+        s = np.power(10, lpwr0 + self.slope * self.bins)
         ff = s / (s + 10**noise)
 
         smooth = idct(self.ft*ff, norm='ortho') * self.p(self.spectrum.wave)
