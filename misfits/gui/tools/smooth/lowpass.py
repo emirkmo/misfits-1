@@ -86,7 +86,8 @@ Move the cursor to a panel and use the scrolling to zoom in and out and the midd
 
     def set_smooth(e):
 
-        if not e.inaxes is ax[1]:
+        if not e.inaxes is ax[1] or \
+                (e.button == 1 and int(e.xdata) <= 1):
             return
 
         if e.button == 1:
