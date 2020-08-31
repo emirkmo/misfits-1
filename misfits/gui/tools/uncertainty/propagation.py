@@ -5,18 +5,18 @@ from scipy.stats import norm
 from matplotlib import cm, gridspec
 
 from ...plot import ErrorSnake
-from ....tools.uncertainty import Covariance
+from ....tools.uncertainty import Propagation
 
 def main(gui, spectrum, feature, output, *args, **kwargs):
-    ''' - Uncertainty / Covariance
+    ''' - Uncertainty / Propagation
 
-Get the fit uncertainties from the covariance matrix.
+Get errors from propagation of uncertainty.
 
 The upper panel shows the spectrum (black line), the 1-sigma, 2-sigma and 3-sigma errors (red, green and blue polygons, respectively) and the selected section (colored semitransparent area) encapsulating colored markers indicating the measured features.
 The lower panel(s) show the results with the color of each subplot's spine matching the markers in the upper panel. The red, green and blue vertical lines indicate 1-sigma, 2-sigma and 3-sigma, respectively of the normal distribution (dashed black line).
 The buttons on the bottom changes between sections and quantitative results are printed beneath this text.'''
 
-    method = Covariance(spectrum, feature, output)
+    method = Propagation(spectrum, feature, output)
 
     if gui is None:
         return method

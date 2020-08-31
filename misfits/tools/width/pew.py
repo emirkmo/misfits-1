@@ -24,12 +24,24 @@ class pEW (BaseTool) :
         f = lambda w: (np.mean(w), np.mean(self.spectrum(*w).smooth))
         return self._map_nested_lists(f, self.maxima)
 
-    def pew(self, spectrum, w0, ww):
+    def pew(self, p0, p1):
 
-        p = np.poly1d(np.polyfit([w0, ww], list(map(spectrum.spline[0], [w0, ww])), 1))
-        w = 1 - spectrum.smooth / p(spectrum.wave)
+        p0 = p0 if not isinstance(p0, float) else (p0, self.spectrum.spline[0](p0))
+        p1 = p1 if not isinstance(p1, float) else (p1, self.spectrum.spline[0](p1))
 
-        return UnivariateSpline(spectrum.wave, w, k=1, s=0).integral(w0, ww)
+        c = np.poly1d(np.polyfit(*zip(*[p0, p1]), deg=1))
+        f = 1 - self.spectrum.flux / c(self.spectrum.wave)
+
+        pew = UnivariateSpline(self.spectrum.wave, f, k=1, s=0).integral(p0, p1)
+
+        f = self.spectrum.error**2 / c(self.spectrum.wave)**2
+
+        i = np.arange(self.spectrum.N)
+        dw = UnivariateSpline(i, self.spectrum.wave).derivative()(i)
+
+        var = UnivariateSpline(self.spectrum.wave, f * dw, k=1, s=0).integral(p0, p1)
+
+        return pew, np.sqrt(var)
 
     def continuum_error(self, limits, maxima):
 
@@ -47,11 +59,15 @@ class pEW (BaseTool) :
     @BaseTool.iterator_modifier(continuum_error)
     def __call__(self, limits, maxima):
 
-        widths, maxima = [], deepcopy(maxima)
+        flux = self.spectrum.flux
+        self.spectrum.flux = self.spectrum.smooth
+
+        widths, stddevs, maxima = [], [], deepcopy(maxima)
 
         for i in range(len(limits)):
 
             widths.append([])
+            stddevs.append([])
 
             _maxima = self.spectrum.spline.maxima
             j = np.where( (limits[i][0] <= _maxima) & (_maxima <= limits[i][1]) )
@@ -62,10 +78,14 @@ class pEW (BaseTool) :
                 w0 = _maxima[np.argmin((_maxima - w0)**2)]
                 ww = _maxima[np.argmin((_maxima - ww)**2)]
 
-                widths[-1].append(self.pew(self.spectrum, w0, ww))
+                width, stddev = self.pew(w0, ww)
+                widths[-1].append(width)
+                stddevs[-1].append(stddev)
 
                 maxima[i][j] = w0, ww
 
+        self.spectrum.flux = flux
+
         self.set_parameters(limits=limits, maxima=maxima)
 
-        return widths, None, None
+        return widths, stddevs, None

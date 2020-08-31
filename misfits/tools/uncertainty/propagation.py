@@ -6,10 +6,10 @@ from scipy.stats import norm
 
 from ... import FeatureError
 
-class Covariance (object) :
+class Propagation (object) :
 
     NAME = __name__.split('.',2)[2]
-    DEPENDENCIES = 'feature.fit',
+    DEPENDENCIES = 'feature.stddev',
 
     def __init__(self, spectrum, feature, output_format=None):
 
@@ -25,10 +25,10 @@ class Covariance (object) :
 
     def __call__(self):
 
-        if not hasattr(self.feature, 'fit'):
-            raise FeatureError('feature doesn\'t support fitting')
-
         self.data = self.feature(**self.feature.get_parameters())[:2]
+
+        if self.data[1] is None:
+            raise FeatureError('feature doesn\'t support error propagation')
 
         self.data = [list(zip(*data)) for data in zip(*self.data)]
 

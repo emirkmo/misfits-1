@@ -10,13 +10,13 @@ class BaseTool (object) :
 
         self.set_spectrum(spectrum)
 
-    def set_spectrum(self, spectrum):
-
-        self.spectrum = spectrum
-
     def auto(self, limits=None):
 
         return {}
+
+    def set_spectrum(self, spectrum):
+
+        self.spectrum = spectrum
 
     def set_parameters(self, **params):
 

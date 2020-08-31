@@ -1,2 +1,2 @@
 from .montecarlo import MonteCarlo
-from .covariance import Covariance
+from .propagation import Propagation

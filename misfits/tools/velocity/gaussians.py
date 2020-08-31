@@ -55,7 +55,12 @@ class Gaussians (BaseToolGaussians) :
             continuum[i] = list(np.polyfit(limits[i], np.random.normal(loc, scale), 1))
             amplitudes[i] = list(amplitudes[i] - cx0s + np.poly1d(continuum[i])(x0s[i]))
 
+        spectrum_error = self.spectrum.error
+        self.spectrum.set_error(np.ones_like(spectrum_error))
+
         yield self, limits, continuum, amplitudes, x0s, stddevs, references
+
+        self.spectrum.set_error(spectrum_error)
 
     @BaseToolGaussians.iterator_modifier(continuum_error)
     def __call__(self, limits, continuum, amplitudes, x0s, stddevs, references):
