@@ -1,6 +1,6 @@
 import numpy as np
 
-from scipy.fftpack import dct, idct
+from scipy.fft import dct, idct
 from scipy.optimize import minimize
 from scipy.signal import medfilt
 
