@@ -45,7 +45,7 @@ class Minima (BaseTool) :
 
             s = self.spectrum(*limits[stack()[1][0].f_locals['i']])
 
-            loc = np.mean(s.flux)
+            loc = 2 * np.mean(s.flux)
             scale = np.abs(loc) * s.continuum_error
 
             (x0, xx), (y0, yy) = s.wave[[0,-1]], np.random.normal(loc, scale, size=2)
