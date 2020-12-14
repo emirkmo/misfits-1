@@ -68,7 +68,7 @@ class Gaussians (BaseToolGaussians) :
         self.continuum = []
         self.amplitudes = []
         self.x0s, std_x0s = [], []
-        self.stddevs = []
+        self.stddevs, std_stddevs = [], []
 
         chi2s = []
 
@@ -84,9 +84,10 @@ class Gaussians (BaseToolGaussians) :
                 getattr(self, k).append(v)
             std_x0s.append(std['x0s'])
             chi2s.append(chi2)
+            std_stddevs.append(std['stddevs'])
 
         self.continuum = list(map(tuple, self.continuum))
         self.limits = limits
         self.references = references
 
-        return deepcopy(self.x0s), std_x0s, chi2s
+        return deepcopy(self.x0s), std_x0s, chi2s, deepcopy(self.stddevs), std_stddevs

@@ -7,6 +7,9 @@ from ... import FeatureError, MethodError
 
 from ..base import BaseIterator
 
+def get_fwhm(gsigma):
+    return 2. * np.sqrt(2. * np.log(2.)) * gsigma
+
 class MonteCarlo (BaseIterator) :
 
     NAME = __name__.split('.',2)[2]
@@ -37,6 +40,8 @@ class MonteCarlo (BaseIterator) :
     def __call__(self):
 
         self.data = []
+        self.sigmas = []
+        self.gfwhm = []
 
         t0, l = time.time(), 0
         for i in range(self.N):
@@ -61,6 +66,10 @@ class MonteCarlo (BaseIterator) :
 
             res = self.feature(**self.params)
             self.data.append(res[0])
+            #For use in velocity.gaussians FWHM
+            if 'velocity.gaussians' in str(self.feature):
+                self.fwhm = True
+                self.sigmas.append(res[3])
 
         print(''.ljust(l), file=sys.stderr, end='\r')
 
@@ -68,6 +77,17 @@ class MonteCarlo (BaseIterator) :
 
         self.data = [zip(*data) for data in zip(*self.data)]
         self.data = [[tuple(filter(None,data)) for data in section] for section in self.data]
+
+        #For use in velocity.gaussians FWHM
+        #Get sigmas and calculate fwhm matching shape of self.data
+        if self.fwhm:
+            self.sigmas = [zip(*data) for data in zip(*self.sigmas)]
+            self.sigmas = [[tuple(filter(None,data)) for data in section] for section in self.sigmas]
+
+            for j,featuren in enumerate(self.sigmas):
+                for k, sigma_pars in enumerate(featuren):
+                     self.sigmas[j][k] = get_fwhm(np.array(sigma_pars).flatten())
+
 
     def transform(self, i, j, f):
 
@@ -107,6 +127,14 @@ class MonteCarlo (BaseIterator) :
 
         return np.mean(self.data[i][j])
 
+    # For use in velocity.gaussians FWHM
+    def fwhm_mean(self, i, j, transformed=False):
+
+        if transformed:
+            return self.transform(i, j, np.mean)
+
+        return np.mean(self.sigmas[i][j])
+
     def median(self, i, j, transformed=False):
 
         if transformed:
@@ -120,6 +148,14 @@ class MonteCarlo (BaseIterator) :
             return self.transform(i, j, np.std)
 
         return np.std(self.data[i][j])
+
+    # For use in velocity.gaussians FWHM
+    def fwhm_std(self, i, j, transformed=False):
+
+        if transformed:
+            return self.transform(i, j, np.std)
+
+        return np.std(self.sigmas[i][j])
 
     def pctile(self, i, j, pct, transformed=False):
 
@@ -140,9 +176,14 @@ class MonteCarlo (BaseIterator) :
 
                 if self.len(i, j):
                     output.append(' '.join(map(str, [self.mean(i, j), self.std(i, j)])))
+                    #Add FWHM to output only if velocity.gaussians
+                    if self.fwhm:
+                        output.append(' '.join(map(str, [self.fwhm_mean(i, j), self.fwhm_std(i, j)])))
                 else:
                     output.append('')
-            
+                    if self.fwhm:
+                        output.append('')
+
             output.append('')
 
         return '\n'.join(output).strip()
