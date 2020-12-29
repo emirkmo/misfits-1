@@ -70,7 +70,8 @@ class MonteCarlo (BaseIterator) :
             if 'velocity.gaussians' in str(self.feature):
                 self.fwhm = True
                 self.sigmas.append(res[3])
-
+            else:
+                self.fwhm = False
         print(''.ljust(l), file=sys.stderr, end='\r')
 
         self.feature.set_parameters(**self.params)
